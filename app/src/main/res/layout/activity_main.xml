@@ -3,13 +3,6 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     xmlns:android="http://schemas.android.com/apk/res/android">
-
-    <ListView
-        android:id="@+id/lvItems"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content">
-
-    </ListView>
     <Button
         android:id="@+id/btnShow"
         android:onClick="onShowClick"
@@ -24,4 +17,18 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         />
+    <Button
+        android:id="@+id/btnAdd"
+        android:onClick="onAddClick"
+        android:text="@string/btn_add"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        />
+
+    <ListView
+    android:id="@+id/lvItems"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content">
+
+    </ListView>
 </LinearLayout>

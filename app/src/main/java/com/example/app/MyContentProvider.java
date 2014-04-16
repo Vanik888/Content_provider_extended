@@ -126,13 +126,10 @@ public class MyContentProvider extends ContentProvider {
     @Override
     public Uri insert(Uri uri, ContentValues contentValues) {
         Log.d(myLogger, "insert");
-        if (sUriMatcher.match(uri) != studentsUriID)
+        if (sUriMatcher.match(uri) != studentsUriID && sUriMatcher.match(uri) != groupsUriID)
             throw new IllegalArgumentException("Wrong URI: " + uri);
 
-        if (sUriMatcher.match(uri) != groupsUriID)
-            throw new IllegalArgumentException("Wrong URI: " + uri);
-
-        String table_name = uri.getPath();
+        String table_name = uri.getPath().substring(1,uri.getPath().length());
         db = dbHelper.getWritableDatabase();
         long rowID = db.insert(table_name, null, contentValues);
         Uri resultUri = ContentUris.withAppendedId(uri, rowID);
