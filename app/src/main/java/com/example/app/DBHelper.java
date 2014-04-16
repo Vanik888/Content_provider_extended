@@ -37,10 +37,13 @@ class DBHelper extends SQLiteOpenHelper {
         Long aLong = db.insert("groups",null, cvGroups);
 
         ContentValues cvStudents = new ContentValues();
-        cvStudents.put("name", "misha ");
-        cvStudents.put("surname", "vasiliev");
-        cvStudents.put("age", 11);
-        Long insert = db.insert("students",null, cvStudents);
+        for (int i = 1 ; i < 15; i++) {
+            cvStudents.put("name", "misha_" + i);
+            cvStudents.put("surname", "vasiliev_" + i);
+            cvStudents.put("age", 11 + i);
+            Long insert = db.insert("students",null, cvStudents);
+        }
+
     }
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {

@@ -24,15 +24,15 @@ public class MyContentProvider extends ContentProvider {
     static final String STUDENTS_TABLE = "students";
 
 
-    static final String GROUPS_ID = "_id";
-    static final String GROUPS_NAME = "group_number";
-    static final String GROUPS_CURSE = "curse";
+    public static final String GROUPS_ID = "_id";
+    public static final String GROUPS_NAME = "group_number";
+    public static final String GROUPS_CURSE = "curse";
 
 
-    static final String STUDENTS_ID = "_id";
-    static final String STUDENTS_NAME = "name";
-    static final String STUDENTS_SURNAME = "surname";
-    static final String STUDENTS_AGE = "age";
+    public static final String STUDENTS_ID = "_id";
+    public static final String STUDENTS_NAME = "name";
+    public static final String STUDENTS_SURNAME = "surname";
+    public static final String STUDENTS_AGE = "age";
 
 
     // Скрипт создания таблицы
@@ -79,12 +79,14 @@ public class MyContentProvider extends ContentProvider {
     SQLiteDatabase db;
     private final static int groupsUriID = 1;
     private final static int studentsUriID = 2;
+    private final static int studentsUriDIforID = 20;
     @Override
     public boolean onCreate() {
         Log.d(myLogger, "onCreateContentProvider");
 
         sUriMatcher.addURI(AUTHORITY, GROUPS_PATH, groupsUriID);
         sUriMatcher.addURI(AUTHORITY, STUDENTS_PATH, studentsUriID);
+        sUriMatcher.addURI(AUTHORITY, STUDENTS_PATH + "/#", studentsUriDIforID );
 
         dbHelper = new DBHelper(getContext());
 
@@ -141,9 +143,19 @@ public class MyContentProvider extends ContentProvider {
     }
 
     @Override
-    public int delete(Uri uri, String s, String[] strings) {
+    public int delete(Uri uri, String selection, String[] selectionArgs) {
+        if (sUriMatcher.match(uri)== studentsUriID) {
+            Log.d(myLogger, "delete students , uri = " + uri);
+        }
+        else if (sUriMatcher.match(uri) == studentsUriDIforID) {
+            String id = uri.getLastPathSegment();
+            Log.d(myLogger, "delete query by student id, uri = " + uri + " id = " + id);
 
-        return 0;
+        }
+        db = dbHelper.getWritableDatabase();
+        int cnt = db.delete(STUDENTS_TABLE,selection, selectionArgs);
+        getContext().getContentResolver().notifyChange(uri, null);
+        return cnt;
     }
 
     @Override
