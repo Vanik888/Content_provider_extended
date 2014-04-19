@@ -1,26 +1,17 @@
 package com.example.app;
 
 import android.app.Activity;
-import android.app.LoaderManager;
+import android.app.LoaderManager.LoaderCallbacks;
 import android.content.ContentValues;
-import android.content.Context;
-import android.content.CursorLoader;
 import android.content.Loader;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
-import android.widget.CursorAdapter;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
-import android.app.LoaderManager.*;
 
-import org.apache.http.entity.ContentProducer;
-
-import java.util.ArrayList;
 import java.util.Random;
 
 public class MainActivity extends Activity implements LoaderCallbacks<Cursor> {
@@ -39,18 +30,27 @@ public class MainActivity extends Activity implements LoaderCallbacks<Cursor> {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         getLoaderManager().initLoader(LOADER_ID, null, this);
+//            Cursor cursor = getContentResolver().query(STUDENTS_URI, null, null,
+//                    null, null);
+            String[] from = new String[] {MyContentProvider.STUDENTS_NAME, MyContentProvider.STUDENTS_SURNAME, MyContentProvider.STUDENTS_AGE};
+            int[] to = new int[] {R.id.tvName, R.id.tvSurname, R.id.tvAge};
+            scAdapter = new SimpleCursorAdapter(this, R.layout.item, null, from, to, 0 );
+            lvItems = (ListView) findViewById(R.id.lvItems);
+            lvItems.setAdapter(scAdapter);
+
     }
 
     public void onShowClick(View v) {
         Log.d(myLogger, "show clicked");
         if(v.getId() == R.id.btnShow) {
-            Cursor cursor = getContentResolver().query(STUDENTS_URI, null, null,
-                    null, null);
-            String[] from = new String[] {MyContentProvider.STUDENTS_NAME, MyContentProvider.STUDENTS_SURNAME, MyContentProvider.STUDENTS_AGE};
-            int[] to = new int[] {R.id.tvName, R.id.tvSurname, R.id.tvAge};
-            scAdapter = new SimpleCursorAdapter(this, R.layout.item, cursor, from, to, 0 );
-            lvItems = (ListView) findViewById(R.id.lvItems);
-            lvItems.setAdapter(scAdapter);
+//            Cursor cursor = getContentResolver().query(STUDENTS_URI, null, null,
+//                    null, null);
+//            String[] from = new String[] {MyContentProvider.STUDENTS_NAME, MyContentProvider.STUDENTS_SURNAME, MyContentProvider.STUDENTS_AGE};
+//            int[] to = new int[] {R.id.tvName, R.id.tvSurname, R.id.tvAge};
+//            scAdapter = new SimpleCursorAdapter(this, R.layout.item, cursor, from, to, 0 );
+//            lvItems = (ListView) findViewById(R.id.lvItems);
+//            lvItems.setAdapter(scAdapter);
+            getLoaderManager().getLoader(LOADER_ID).forceLoad();
 
         }
     }
@@ -58,8 +58,8 @@ public class MainActivity extends Activity implements LoaderCallbacks<Cursor> {
         Log.d(myLogger, "delete clicked");
         if (v.getId() == R.id.btnDelete) {
             int cnt = getContentResolver().delete(STUDENTS_URI, null , null);
-            getLoaderManager().getLoader(LOADER_ID).forceLoad();
             Log.d(myLogger, "deleted " + cnt + " values");
+            getLoaderManager().getLoader(LOADER_ID).forceLoad();
         }
     }
     public void onAddClick(View v) {
@@ -93,22 +93,6 @@ public class MainActivity extends Activity implements LoaderCallbacks<Cursor> {
 
     @Override
     public void onLoaderReset(Loader<Cursor> cursorLoader) {
-    }
-
-
-
-    public class MyCursorLoader extends CursorLoader {
-        private Uri uri;
-
-        public MyCursorLoader(Context context, Uri uri) {
-            super(context);
-            this.uri = uri;
-        }
-        @Override
-        public Cursor loadInBackground() {
-            Cursor cursor = getContentResolver().query(uri, null, null, null, null);
-            return cursor;
-        }
     }
 }
 
